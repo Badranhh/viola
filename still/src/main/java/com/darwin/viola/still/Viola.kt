@@ -22,7 +22,7 @@ import java.lang.IllegalStateException
 private const val processingBitmapWidth = 720
 private const val processingBitmapHeight = 1280
 
-class Viola(private val faceDetectionListener: FaceDetectionListener) {
+class Viola(private val faceDetectionListener: FaceDetectionListener,val shouldResize:Boolean=true) {
 
     private val imageProcessor: VisionImageProcessor
 
@@ -59,7 +59,10 @@ class Viola(private val faceDetectionListener: FaceDetectionListener) {
         if (isValidInputImage(image)) {
             Util.printLog("The given input bitmap is valid, ready for image processing.")
             (imageProcessor as FaceDetectorProcessor).faceOptions = option
-            imageProcessor.processBitmap(resize(image))
+            if(shouldResize)
+                imageProcessor.processBitmap(resize(image))
+            else
+                imageProcessor.processBitmap(image)
         } else {
             Util.printLog("The given input bitmap is not valid, terminating image processing.")
             faceDetectionListener.onFaceDetectionFailed(
